@@ -1,0 +1,8 @@
+BusIntent when does the next {direction} {route} arrive
+BusIntent when does the next {direction} number {route} arrive
+BusIntent when does the next {direction} {route} depart
+BusIntent when does the next {direction} number {route} depart
+BusIntent when does the next {direction} {route} bus arrive
+BusIntent when does the next {direction} number {route} bus arrive
+BusIntent when does the next {direction} {route} bus depart
+BusIntent when does the next {direction} number {route} bus depart

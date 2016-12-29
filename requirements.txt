@@ -1,0 +1,5 @@
+Flask==0.12
+Flask-Ask==0.8.2
+pytz==2016.10
+requests==2.12.4
+zappa==0.32.1

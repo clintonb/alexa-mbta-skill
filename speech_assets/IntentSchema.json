@@ -1,0 +1,17 @@
+{
+  "intents": [
+    {
+      "intent": "BusIntent",
+      "slots": [
+        {
+          "name": "route",
+          "type": "LIST_OF_ROUTES"
+        },
+        {
+          "name": "direction",
+          "type": "LIST_OF_DIRECTIONS"
+        }
+      ]
+    }
+  ]
+}

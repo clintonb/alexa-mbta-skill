@@ -1,0 +1,11 @@
+{
+    "dev": {
+        "app_function": "alexa_transit_skill.app", 
+        "s3_bucket": "<bucket-name>",
+        "keep_warm": false,
+        "memory_size": 128,
+        "timeout_seconds": 10,
+        "remote_env_bucket": "<config-bucket-name>",
+        "remote_env_file": "dev-config.json"
+    }
+}
