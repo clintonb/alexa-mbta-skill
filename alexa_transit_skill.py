@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import datetime
 import logging
+import math
 import os
 
 import requests
@@ -22,6 +23,11 @@ APP_NAME = 'MBTA'
 MBTA_API_KEY = os.environ['MBTA_API_KEY']
 
 
+def distance(p1, p2):
+    """ Returns the distance between two points. """
+    return math.sqrt(pow((p2[0] - p1[0]), 2) + pow((p2[1] - p1[1]), 2))
+
+
 class MbtaApi(object):
     """
     API wrapper for MBTA-realtime API v2.
@@ -34,8 +40,7 @@ class MbtaApi(object):
 
     def __init__(self, latitude, longitude):
         self.api_key = MBTA_API_KEY
-        self.latitude = latitude
-        self.longitude = longitude
+        self.current_location = (latitude, longitude)
 
     @classmethod
     def convert_direction(cls, s):
@@ -45,6 +50,7 @@ class MbtaApi(object):
         }[s]
 
     def stops_by_route(self, route_id, direction):
+        # TODO Cache this information for all users
         url = '{api_host}/stopsbyroute?api_key={api_key}&route={route}&format=json'.format(
             api_host=self.API_HOST, api_key=self.api_key, route=route_id
         )
@@ -52,23 +58,19 @@ class MbtaApi(object):
         stops_by_route = [stops for stops in stops_by_route if stops['direction_id'] == direction][0]['stop']
         return stops_by_route
 
-    def stops_by_location(self):
-        url = '{api_host}/stopsbylocation?api_key={api_key}&lat={latitude}&lon={longitude}&format=json'.format(
-            api_host=self.API_HOST, api_key=self.api_key, latitude=self.latitude, longitude=self.longitude
-        )
-        stops_by_location = requests.get(url).json()['stop']
-        return stops_by_location
-
-    def route_stops_by_location(self, route_id, direction):
-        stops_by_route = self.stops_by_route(route_id, direction)
-        stops_by_location = self.stops_by_location()
-        route_stop_ids = [stop['stop_id'] for stop in stops_by_route]
-        route_stops_by_location = [stop for stop in stops_by_location if stop['stop_id'] in route_stop_ids]
-        return route_stops_by_location
-
     def next_departure(self, route_id, direction):
-        route_stops_by_location = self.route_stops_by_location(route_id, direction)
-        stop_id = route_stops_by_location[0]['stop_id']
+        stops_by_route = self.stops_by_route(route_id, direction)
+
+        # Determine the closest stop
+        closest = (float('inf'), None)
+
+        for stop in stops_by_route:
+            stop_location = (float(stop['stop_lat']), float(stop['stop_lon']))
+            stop_distance = distance(self.current_location, stop_location)
+            if stop_distance < closest[0]:
+                closest = (stop_distance, stop)
+
+        stop_id = closest[1]['stop_id']
         url = '{api_host}/predictionsbystop?api_key={api_key}&stop={stop_id}&format=json'.format(
             api_host=self.API_HOST, api_key=self.api_key, stop_id=stop_id
         )
@@ -84,7 +86,8 @@ def bus(direction, route):
     mbta_api = MbtaApi(LATITUDE, LONGITUDE)
     int_direction = mbta_api.convert_direction(direction)
     location, departure = mbta_api.next_departure(route, int_direction)
-    spoken_departure = departure.strftime("%I:%M %p")
+
+    spoken_departure = departure.strftime('%I:%M %p')
 
     text = 'The next {direction} {route} bus departs {location} at {departure}.'.format(
         direction=direction, route=route, location=location, departure=spoken_departure
