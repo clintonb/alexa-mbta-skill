@@ -12,6 +12,19 @@
           "type": "LIST_OF_DIRECTIONS"
         }
       ]
+    },
+    {
+      "intent": "SubwayIntent",
+      "slots": [
+        {
+          "name": "subway_line",
+          "type": "LIST_OF_SUBWAY_LINES"
+        },
+        {
+          "name": "direction",
+          "type": "LIST_OF_DIRECTIONS"
+        }
+      ]
     }
   ]
 }

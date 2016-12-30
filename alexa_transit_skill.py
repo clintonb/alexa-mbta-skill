@@ -86,11 +86,30 @@ def bus(direction, route):
     mbta_api = MbtaApi(LATITUDE, LONGITUDE)
     int_direction = mbta_api.convert_direction(direction)
     location, departure = mbta_api.next_departure(route, int_direction)
-
     spoken_departure = departure.strftime('%I:%M %p')
 
     text = 'The next {direction} {route} bus departs {location} at {departure}.'.format(
         direction=direction, route=route, location=location, departure=spoken_departure
+    )
+    return statement(text).simple_card(APP_NAME, text)
+
+
+@ask.intent('SubwayIntent')
+def subway(direction, subway_line):
+    # TODO Determine how to differentiate between the different green lines (B, C, D, E)
+    if subway_line == 'green':
+        text = 'I cannot provide times for the green line.'
+        return statement(text).simple_card(APP_NAME, text)
+
+    mbta_api = MbtaApi(LATITUDE, LONGITUDE)
+    int_direction = mbta_api.convert_direction(direction)
+
+    # TODO Determine if the user's meaning of outbound/inbound corresponds with that of the MBTA.
+    location, departure = mbta_api.next_departure(subway_line, int_direction)
+    spoken_departure = departure.strftime('%I:%M %p')
+
+    text = 'The next {direction} {subway_line} line train departs {location} at {departure}.'.format(
+        direction=direction, subway_line=subway_line, location=location, departure=spoken_departure
     )
     return statement(text).simple_card(APP_NAME, text)
 

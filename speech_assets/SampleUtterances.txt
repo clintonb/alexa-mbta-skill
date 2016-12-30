@@ -6,3 +6,5 @@ BusIntent when does the next {direction} {route} bus arrive
 BusIntent when does the next {direction} number {route} bus arrive
 BusIntent when does the next {direction} {route} bus depart
 BusIntent when does the next {direction} number {route} bus depart
+SubwayIntent when does the next {direction} {subway_line} line train arrive
+SubwayIntent when does the next {direction} {subway_line} line train depart
