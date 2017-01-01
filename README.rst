@@ -1,5 +1,5 @@
-Alexa Transit Skill
--------------------
+Alexa MBTA Skill
+----------------
 
 This skill uses the `MBTA-realtime API <http://realtime.mbta.com/Portal/Home/Documents>`_ to get nearby transit times.
 The project is based on `Flask-Ask <https://github.com/johnwheeler/flask-ask/>`_, and is deployed to AWS S3 and Lambda
