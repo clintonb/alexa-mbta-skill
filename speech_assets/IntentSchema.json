@@ -21,8 +21,8 @@
           "type": "LIST_OF_SUBWAY_LINES"
         },
         {
-          "name": "direction",
-          "type": "LIST_OF_DIRECTIONS"
+          "name": "destination_station",
+          "type": "LIST_OF_SUBWAY_STATIONS"
         }
       ]
     }
